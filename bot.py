@@ -215,7 +215,9 @@ if __name__ == "__main__":
 
     if first_argument == 'pre_lunch':
         bot.do_pre_lunch()
-    if first_argument == 'lunch':
+    elif first_argument == 'lunch':
         bot.do_lunch()
-    if first_argument == 'asf':
+    elif first_argument == 'asf':
         bot.do_asf()
+    else:
+        print("Nothing to do with those arguments.")
