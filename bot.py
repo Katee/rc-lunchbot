@@ -44,6 +44,7 @@ class Lunchbot():
 
         yes_responses = [
             'y', 'ye', 'yes', 'yea', 'yeah',
+            'sur', 'sure',
             'rsvp yes',
         ]
 
