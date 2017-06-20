@@ -201,14 +201,14 @@ if __name__ == "__main__":
     ZULIP_API_KEY = os.environ['ZULIP_LUNCHBOT_KEY']
     ZULIP_SITE = os.getenv('ZULIP_LUNCHBOT_SITE', 'https://recurse.zulipchat.com')
     ZULIP_STREAM = os.getenv('ZULIP_LUNCHBOT_STREAM', 'lunchbot-staging')
-    TEST_MODE = os.getenv('ZULIP_LUNCHBOT_TEST_MODE', True)
+    IN_PRODUCTION = os.getenv('ZULIP_LUNCHBOT_IN_PRODUCTION', False) in [True, 'True', 'true']
 
     bot = Lunchbot(
         ZULIP_USERNAME,
         ZULIP_API_KEY,
         ZULIP_SITE,
         ZULIP_STREAM,
-        test_mode=TEST_MODE
+        test_mode=(not IN_PRODUCTION)
     )
 
     first_argument = sys.argv[1]
