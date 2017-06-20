@@ -7,6 +7,7 @@ import random
 import time
 import datetime
 import math
+import re
 
 import zulip
 
@@ -26,9 +27,14 @@ class Lunchbot():
         # Subscribe to our stream
         self.client.add_subscriptions([{'name': self.stream}])
 
+    def clean_message_content(self, message):
+        p = re.compile('([^\w]*)')
+        content = message['content'].lower()
+        return p.sub('', content)
+
     def message_sentiment(self, message):
         """Using a simple hardcoded list figure out the meaning of a message"""
-        content = message['content']
+        content = self.clean_message_content(message)
 
         skip_responses = [
             'ski', 'skip',
@@ -41,8 +47,8 @@ class Lunchbot():
             'rsvp yes',
         ]
 
-        is_skip_response = content.lower() in skip_responses
-        is_yes_response = content.lower() in yes_responses
+        is_skip_response = content in skip_responses
+        is_yes_response = content in yes_responses
 
         if is_yes_response and not is_skip_response:
             return 1
