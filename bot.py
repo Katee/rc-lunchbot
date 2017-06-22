@@ -202,7 +202,7 @@ class Lunchbot():
         print(json.dumps(message, indent=4))
 
 
-if __name__ == "__main__":
+def setup_bot():
     ZULIP_USERNAME = os.environ['ZULIP_LUNCHBOT_EMAIL']
     ZULIP_API_KEY = os.environ['ZULIP_LUNCHBOT_KEY']
     ZULIP_SITE = os.getenv('ZULIP_LUNCHBOT_SITE', 'https://recurse.zulipchat.com')
@@ -217,13 +217,15 @@ if __name__ == "__main__":
         test_mode=(not IN_PRODUCTION)
     )
 
-    first_argument = sys.argv[1]
+    return bot
 
-    if first_argument == 'pre_lunch':
+
+def lambda_handler(event, context):
+    bot = setup_bot()
+
+    if event["type"] == "pre_lunch":
         bot.do_pre_lunch()
-    elif first_argument == 'lunch':
+    elif event["type"] == "lunch":
         bot.do_lunch()
-    elif first_argument == 'asf':
+    elif event["type"] == "asf_reminder":
         bot.do_asf()
-    else:
-        print("Nothing to do with those arguments.")
