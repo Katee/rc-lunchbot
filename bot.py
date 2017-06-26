@@ -37,6 +37,7 @@ class Lunchbot():
 
         skip_responses = [
             'ski', 'skip',
+            'n', 'no', 'nay',
             'pass',
             'rsvp no',
         ]
