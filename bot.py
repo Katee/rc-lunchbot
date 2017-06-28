@@ -1,6 +1,4 @@
-#! /usr/local/bin/python
 # -*- coding: utf-8 -*-
-import os
 import json
 import random
 import time
@@ -18,12 +16,11 @@ class Lunchbot():
     On Zulip create a bot under "settings" and use the username and API key to initialize this bot.
     Stream is the stream the bot should be active on.
     """
-    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides='', test_mode=True):
+    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides=[], test_mode=True):
         self.test_mode = test_mode
         self.client = zulip.Client(zulip_username, zulip_api_key, site=zulip_site)
         self.stream = stream
-
-        self.parse_date_overrides(date_overrides)
+        self.date_overrides = date_overrides
 
         # Subscribe to our stream
         self.client.add_subscriptions([{'name': self.stream}])
@@ -134,23 +131,6 @@ class Lunchbot():
             except KeyError:
                 pass  # don't care
 
-    def parse_date_overrides(self, date_overrides_string):
-        self.date_overrides = {}
-
-        for date_override_string in date_overrides_string.split(','):
-            if len(date_override_string) == 0:
-                continue
-
-            if date_override_string[0] == "+":
-                override = True
-            elif date_override_string[0] == "-":
-                override = False
-            else:
-                raise Exception("Missing '+' or '-' prefix for date override '%s'" % date_override_string)
-
-            date = datetime.datetime.strptime(date_override_string[1:], '%Y-%m-%d')
-            self.date_overrides[date] = override
-
     def is_lunch_day(self):
         d = datetime.date.today()
 
@@ -239,32 +219,10 @@ class Lunchbot():
     def print_message(self, message):
         print(json.dumps(message, indent=4))
 
-
-def setup_bot():
-    ZULIP_USERNAME = os.environ['ZULIP_LUNCHBOT_EMAIL']
-    ZULIP_API_KEY = os.environ['ZULIP_LUNCHBOT_KEY']
-    ZULIP_SITE = os.getenv('ZULIP_LUNCHBOT_SITE', 'https://recurse.zulipchat.com')
-    ZULIP_STREAM = os.getenv('ZULIP_LUNCHBOT_STREAM', 'lunchbot-staging')
-    IN_PRODUCTION = os.getenv('ZULIP_LUNCHBOT_IN_PRODUCTION', False) in [True, 'True', 'true']
-
-    bot = Lunchbot(
-        ZULIP_USERNAME,
-        ZULIP_API_KEY,
-        ZULIP_SITE,
-        ZULIP_STREAM,
-        date_overrides=os.getenv('ZULIP_LUNCHBOT_DATE_OVERRIDES', ''),
-        test_mode=(not IN_PRODUCTION)
-    )
-
-    return bot
-
-
-def lambda_handler(event, context):
-    bot = setup_bot()
-
-    if event["type"] == "pre_lunch":
-        bot.do_pre_lunch()
-    elif event["type"] == "lunch":
-        bot.do_lunch()
-    elif event["type"] == "asf_reminder":
-        bot.do_asf()
+    def handle_command(self, command):
+        if command == "prelunch":
+            self.do_pre_lunch()
+        elif command == "lunch":
+            self.do_lunch()
+        elif command == "asf":
+            self.do_asf()
