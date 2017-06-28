@@ -8,6 +8,10 @@ Join the 'lunchbot' stream to opt-in.
 On days when RC is open Lunchbot will privately message you after 11am to verify you want to be part of a lunch group.
 Around noon Lunchbot posts the lunch groups for that day in the 'lunchbot' stream.
 
+### Date overrides
+
+Sometimes lunchbot needs to run on non standard dates. To handle this you can set `ENV['ZULIP_LUNCHBOT_DATE_OVERRIDES']` to a comma separated list of dates prefixed by "+" or "-" in the format "2017-07-03". See `.env.sample` for examples.
+
 ## Local setup
 
 Add the expected variables to ENV. An easy way to do this is to `cp .env.sample .env` and edit `.env` to have the correct values. Then you can `source .env` before running `python bot.py`.
