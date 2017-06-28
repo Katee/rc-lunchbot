@@ -18,10 +18,12 @@ class Lunchbot():
     On Zulip create a bot under "settings" and use the username and API key to initialize this bot.
     Stream is the stream the bot should be active on.
     """
-    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, test_mode=True):
+    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides='', test_mode=True):
         self.test_mode = test_mode
         self.client = zulip.Client(zulip_username, zulip_api_key, site=zulip_site)
         self.stream = stream
+
+        self.parse_date_overrides(date_overrides)
 
         # Subscribe to our stream
         self.client.add_subscriptions([{'name': self.stream}])
@@ -132,7 +134,38 @@ class Lunchbot():
             except KeyError:
                 pass  # don't care
 
+    def parse_date_overrides(self, date_overrides_string):
+        self.date_overrides = {}
+
+        for date_override_string in date_overrides_string.split(','):
+            if len(date_override_string) == 0:
+                continue
+
+            if date_override_string[0] == "+":
+                override = True
+            elif date_override_string[0] == "-":
+                override = False
+            else:
+                raise Exception("Missing '+' or '-' prefix for date override '%s'" % date_override_string)
+
+            date = datetime.datetime.strptime(date_override_string[1:], '%Y-%m-%d')
+            self.date_overrides[date] = override
+
+    def is_lunch_day(self):
+        d = datetime.date.today()
+
+        if d in self.date_overrides:
+            return self.date_overrides[d]
+
+        # Default run Monday to Thursday
+        if d.weekday() <= 3:
+            return True
+
     def do_lunch(self):
+        if not self.is_lunch_day():
+            print("Not running today")
+            return
+
         self.opted_in_emails = set()
         relevant_messages = self.relevant_messages()
 
@@ -156,6 +189,10 @@ class Lunchbot():
 
     def do_pre_lunch(self):
         """PM members of the stream to see if they want to do lunch today"""
+        if not self.is_lunch_day():
+            print("Not running today")
+            return
+
         subscriber_emails = self.subscriber_emails()
 
         for subscriber_email in subscriber_emails:
@@ -215,6 +252,7 @@ def setup_bot():
         ZULIP_API_KEY,
         ZULIP_SITE,
         ZULIP_STREAM,
+        date_overrides=os.getenv('ZULIP_LUNCHBOT_DATE_OVERRIDES', ''),
         test_mode=(not IN_PRODUCTION)
     )
 
