@@ -16,12 +16,11 @@ class Lunchbot():
     On Zulip create a bot under "settings" and use the username and API key to initialize this bot.
     Stream is the stream the bot should be active on.
     """
-    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides='', test_mode=True):
+    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides=[], test_mode=True):
         self.test_mode = test_mode
         self.client = zulip.Client(zulip_username, zulip_api_key, site=zulip_site)
         self.stream = stream
-
-        self.parse_date_overrides(date_overrides)
+        self.date_overrides = date_overrides
 
         # Subscribe to our stream
         self.client.add_subscriptions([{'name': self.stream}])
@@ -131,23 +130,6 @@ class Lunchbot():
                 self.opted_in_emails.remove(message['sender_email'])
             except KeyError:
                 pass  # don't care
-
-    def parse_date_overrides(self, date_overrides_string):
-        self.date_overrides = {}
-
-        for date_override_string in date_overrides_string.split(','):
-            if len(date_override_string) == 0:
-                continue
-
-            if date_override_string[0] == "+":
-                override = True
-            elif date_override_string[0] == "-":
-                override = False
-            else:
-                raise Exception("Missing '+' or '-' prefix for date override '%s'" % date_override_string)
-
-            date = datetime.datetime.strptime(date_override_string[1:], '%Y-%m-%d')
-            self.date_overrides[date] = override
 
     def is_lunch_day(self):
         d = datetime.date.today()

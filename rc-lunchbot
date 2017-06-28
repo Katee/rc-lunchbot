@@ -4,6 +4,7 @@ import argparse
 
 from defaults import defaults
 from bot import Lunchbot
+from utils import parse_date_overrides
 
 
 def parse_args():
@@ -15,13 +16,16 @@ def parse_args():
     parser.add_argument('--zulip-api-key', default=defaults['zulip_api_key'])
     parser.add_argument('--zulip-site', default=defaults['zulip_site'])
     parser.add_argument('--zulip-stream', default=defaults['zulip_stream'])
-    parser.add_argument('--date-overrides', default=defaults['date_overrides'])
+    parser.add_argument('--date-override', action='append', default=defaults['date_overrides'].split(','), metavar='(+|-)yyyy-mm-dd', help='override running on a date')
 
-    return parser.parse_args()
+    args = vars(parser.parse_args())
+    args['date_overrides'] = parse_date_overrides(args['date_override'])
+
+    return args
 
 
 if __name__ == '__main__':
-    options = vars(parse_args())
+    options = parse_args()
 
     lunchbot = Lunchbot(
         options['zulip_username'],
