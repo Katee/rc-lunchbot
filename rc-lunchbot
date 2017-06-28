@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import argparse
+
+from defaults import defaults
+from bot import Lunchbot
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('command', choices=['prelunch', 'lunch', 'asf'])
+    parser.add_argument('--production', action='store_true', help='actually send Zulip messages')
+    parser.add_argument('--zulip-username', default=defaults['zulip_username'])
+    parser.add_argument('--zulip-api-key', default=defaults['zulip_api_key'])
+    parser.add_argument('--zulip-site', default=defaults['zulip_site'])
+    parser.add_argument('--zulip-stream', default=defaults['zulip_stream'])
+    parser.add_argument('--date-overrides', default=defaults['date_overrides'])
+
+    return parser.parse_args()
+
+
+if __name__ == '__main__':
+    options = vars(parse_args())
+
+    lunchbot = Lunchbot(
+        options['zulip_username'],
+        options['zulip_api_key'],
+        options['zulip_site'],
+        options['zulip_stream'],
+        date_overrides=options['date_overrides'],
+        test_mode=(not options['production'])
+    )
+
+    lunchbot.handle_command(options['command'])

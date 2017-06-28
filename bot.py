@@ -239,6 +239,14 @@ class Lunchbot():
     def print_message(self, message):
         print(json.dumps(message, indent=4))
 
+    def handle_command(self, command):
+        if command == "prelunch":
+            self.do_pre_lunch()
+        elif command == "lunch":
+            self.do_lunch()
+        elif command == "asf":
+            self.do_asf()
+
 
 def setup_bot():
     ZULIP_USERNAME = os.environ['ZULIP_LUNCHBOT_EMAIL']
