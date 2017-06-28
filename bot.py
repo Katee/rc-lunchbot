@@ -244,14 +244,3 @@ class Lunchbot():
             self.do_lunch()
         elif command == "asf":
             self.do_asf()
-
-
-def lambda_handler(event, context):
-    bot = setup_bot()
-
-    if event["type"] == "pre_lunch":
-        bot.do_pre_lunch()
-    elif event["type"] == "lunch":
-        bot.do_lunch()
-    elif event["type"] == "asf_reminder":
-        bot.do_asf()
