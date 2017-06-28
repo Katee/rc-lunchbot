@@ -1,6 +1,4 @@
-#! /usr/local/bin/python
 # -*- coding: utf-8 -*-
-import os
 import json
 import random
 import time
@@ -246,25 +244,6 @@ class Lunchbot():
             self.do_lunch()
         elif command == "asf":
             self.do_asf()
-
-
-def setup_bot():
-    ZULIP_USERNAME = os.environ['ZULIP_LUNCHBOT_EMAIL']
-    ZULIP_API_KEY = os.environ['ZULIP_LUNCHBOT_KEY']
-    ZULIP_SITE = os.getenv('ZULIP_LUNCHBOT_SITE', 'https://recurse.zulipchat.com')
-    ZULIP_STREAM = os.getenv('ZULIP_LUNCHBOT_STREAM', 'lunchbot-staging')
-    IN_PRODUCTION = os.getenv('ZULIP_LUNCHBOT_IN_PRODUCTION', False) in [True, 'True', 'true']
-
-    bot = Lunchbot(
-        ZULIP_USERNAME,
-        ZULIP_API_KEY,
-        ZULIP_SITE,
-        ZULIP_STREAM,
-        date_overrides=os.getenv('ZULIP_LUNCHBOT_DATE_OVERRIDES', ''),
-        test_mode=(not IN_PRODUCTION)
-    )
-
-    return bot
 
 
 def lambda_handler(event, context):
