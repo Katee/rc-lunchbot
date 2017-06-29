@@ -8,8 +8,7 @@ import re
 
 import zulip
 
-from utils import ordinal
-
+from .utils import ordinal
 
 class Lunchbot():
     """
