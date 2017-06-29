@@ -8,7 +8,10 @@ import re
 
 import zulip
 
-from utils import ordinal
+from .utils import ordinal
+
+
+__version__ = '0.0.1'
 
 
 class Lunchbot():

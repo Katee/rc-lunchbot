@@ -1,7 +1,7 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from bot import Lunchbot
-from defaults import defaults
+from lunchbot import Lunchbot, defaults, parse_date_overrides
 
 
 def handler(event, context):
@@ -10,7 +10,7 @@ def handler(event, context):
         defaults["zulip_api_key"],
         defaults["zulip_site"],
         defaults["zulip_stream"],
-        date_overrides=defaults["date_overrides"],
+        date_overrides=parse_date_overrides(defaults["date_overrides"].split(',')),
         test_mode=(not defaults["production"])
     )
 

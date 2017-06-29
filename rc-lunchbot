@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 
-from defaults import defaults
-from bot import Lunchbot
-from utils import parse_date_overrides
-
+from lunchbot import Lunchbot, defaults, parse_date_overrides
 
 def parse_args():
     parser = argparse.ArgumentParser()
