@@ -10,6 +10,10 @@ import zulip
 
 from .utils import ordinal
 
+
+__version__ = '0.0.1'
+
+
 class Lunchbot():
     """
     On Zulip create a bot under "settings" and use the username and API key to initialize this bot.

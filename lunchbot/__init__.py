@@ -1,9 +1,8 @@
 
 """Recurse Center Lunchbot"""
 
-from .defaults import defaults
+from .bot import __version__
 
-from .utils import *
 from .bot import *
-
-
+from .defaults import defaults
+from .utils import *
