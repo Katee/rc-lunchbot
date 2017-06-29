@@ -106,11 +106,11 @@ class Lunchbot():
             and abs(message['timestamp'] - epoch_time) < (60 * 60 * 4)
 
     def rollcall_subject(self):
-        d = datetime.datetime.today()
+        d = datetime.date.today()
         return "Lunchbot %s%s" % (d.strftime("%A %B %-d"), ordinal(d.day))
 
     def message_subject(self, group_index):
-        d = datetime.datetime.today()
+        d = datetime.date.today()
         return "Lunchbot %s%s: Group %s" % (d.strftime("%A %B %-d"), ordinal(d.day), group_index)
 
     def create_lunch_groups(self, subscribers):
