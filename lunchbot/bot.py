@@ -229,3 +229,5 @@ class Lunchbot():
             self.do_lunch()
         elif command == "asf":
             self.do_asf()
+        else:
+            print("command not recognized")
