@@ -19,10 +19,11 @@ class Lunchbot():
     On Zulip create a bot under "settings" and use the username and API key to initialize this bot.
     Stream is the stream the bot should be active on.
     """
-    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, date_overrides=[], test_mode=True):
+    def __init__(self, zulip_username, zulip_api_key, zulip_site, stream, food_stream, date_overrides=[], test_mode=True):
         self.test_mode = test_mode
         self.client = zulip.Client(zulip_username, zulip_api_key, site=zulip_site)
         self.stream = stream
+        self.food_stream = food_stream
         self.date_overrides = date_overrides
 
         # Subscribe to our stream
@@ -161,7 +162,7 @@ class Lunchbot():
 
         for group_index, group in enumerate(groups):
             groups_msg = {
-                'to': self.stream,
+                'to': self.food_stream,
                 'subject': self.message_subject(group_index),
                 'content': "Meet up with your group at 12:30 by the door (or figure out a different time) and get lunch together. " + ', '.join([self.mention_member(user) for user in groups[group_index]])
             }
@@ -195,7 +196,7 @@ class Lunchbot():
     def do_asf(self):
         """Send a reminder for Abstract Salad Factory"""
         food_msg = {
-            'to': 'food',
+            'to': self.food_stream,
             'subject': 'Abstract Salad Factory',
             'content': "Abstract Salad Factory is happening tomorrow from 1-2pm. Bring an ingredient (or a few!) to Hopper and make some salad happen."
         }

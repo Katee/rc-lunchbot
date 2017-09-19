@@ -13,6 +13,7 @@ def parse_args():
     parser.add_argument('--zulip-api-key', default=defaults['zulip_api_key'])
     parser.add_argument('--zulip-site', default=defaults['zulip_site'])
     parser.add_argument('--zulip-stream', default=defaults['zulip_stream'])
+    parser.add_argument('--zulip-food-stream', default=defaults['zulip_food_stream'])
     parser.add_argument('--date-override', action='append', default=defaults['date_overrides'].split(','), metavar='(+|-)yyyy-mm-dd', help='override running on a date')
 
     args = vars(parser.parse_args())
@@ -29,6 +30,7 @@ if __name__ == '__main__':
         options['zulip_api_key'],
         options['zulip_site'],
         options['zulip_stream'],
+        options['zulip_food_stream'],
         date_overrides=options['date_overrides'],
         test_mode=(not options['production'])
     )
